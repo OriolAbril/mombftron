@@ -4,7 +4,8 @@
 \alias{update_data.table}
 \title{Store fit results in data.tables}
 \usage{
-update_data.table(model_dt, marg_dt, row, fit, model_idxs, covariates)
+update_data.table(model_dt, marg_dt, row, fit, model_idxs, covariates_in,
+  covariates_out)
 }
 \arguments{
 \item{model_dt}{Data table to store model probability and model frequency}
@@ -17,7 +18,9 @@ update_data.table(model_dt, marg_dt, row, fit, model_idxs, covariates)
 
 \item{model_idxs}{String containing the indexs of the model whose details have to be stored}
 
-\item{covariates}{Array with covariate names}
+\item{covariates_in}{Array with covariate names (as named in mombf's xstd)}
+
+\item{covariates_out}{Array with covariate names (as named in marg_dt)}
 }
 \description{
 Store fit results in data.tables

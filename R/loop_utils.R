@@ -39,11 +39,13 @@ create_data.table_n_rep_prior <- function(n_vec, n_rep, prior_vec, covariates) {
 #' @param row Row of the data.table to modify
 #' @param fit Result of [mombf::modelSelection()]
 #' @param model_idxs String containing the indexs of the model whose details have to be stored
-#' @param covariates Array with covariate names
+#' @param covariates_in Array with covariate names (as named in mombf's xstd)
+#' @param covariates_out Array with covariate names (as named in marg_dt)
 #' @export
-update_data.table <- function(model_dt, marg_dt, row, fit, model_idxs, covariates) {
-  if (missing(covariates)) { covariates <- colnames(fit$xstd) }
-  marg_dt[row, (covariates) := subset(data.frame(t(fit$margpp)), select=covariates)]
+update_data.table <- function(model_dt, marg_dt, row, fit, model_idxs, covariates_in, covariates_out) {
+  if (missing(covariates_in)) { covariates_in <- colnames(fit$xstd) }
+  if (missing(covariates_out)) {covariates_out <- covariates_in }
+  marg_dt[row, (covariates_out) := subset(data.frame(t(fit$margpp)), select=covariates_in)]
   pprobs <- mombf::postProb(fit)
   modelids <- pprobs$modelid
   model_chosen <- model_idxs == as.character(modelids[1])
