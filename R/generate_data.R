@@ -24,11 +24,11 @@ get_grouped_corr_data <- function(n, m_indep, m_corr, corr_mat, seed) {
   for (idx in 1:m_indep) {
     x <- X0[, idx, drop=FALSE]
     X_corr <- get_corr_data(m_corr, x, corr_mat=corr_mat)
-    colnames(X_corr) <- paste0(colnames(x), "_corr_", 1:(m_corr-1))
+    colnames(X_corr) <- c(colnames(x), paste0(colnames(x), "_corr_", 1:(m_corr-1)))
     if (idx == 1) {
-      X <- cbind(x, X_corr)
+      X <- X_corr
     } else {
-      X <- cbind(X, x, X_corr)
+      X <- cbind(X, X_corr)
     }
   }
   return(X)
@@ -94,5 +94,5 @@ get_corr_data <- function(p, x=rnorm(100), corr_mat, seed) {
   chol2 <- chol(newc)
 
   finalx <- newx %*% chol2 * sd(x) + mean(x)
-  return(finalx[,2:ncol(finalx), drop=FALSE])
+  return(finalx)
 }
