@@ -78,6 +78,7 @@ get_corr_data <- function(p, x=rnorm(100), corr_mat, seed) {
 
   # find the current correlation matrix
   c1 <- var(x_all)
+  diag(c1) <- diag(c1) + 1e-8
 
   # cholesky decomposition to get independence
   chol1 <- solve(chol(c1))

@@ -45,7 +45,8 @@ create_data.table_n_rep_prior <- function(n_vec, n_rep, prior_vec, covariates) {
 update_data.table <- function(model_dt, marg_dt, row, fit, model_idxs, covariates_in, covariates_out) {
   if (missing(covariates_in)) { covariates_in <- colnames(fit$xstd) }
   if (missing(covariates_out)) {covariates_out <- covariates_in }
-  marg_dt[row, (covariates_out) := subset(data.frame(t(fit$margpp)), select=covariates_in)]
+  aux_df = subset(data.frame(t(fit$margpp)), select=covariates_in)
+  marg_dt[row, (covariates_out) := aux_df]
   pprobs <- mombf::postProb(fit)
   modelids <- pprobs$modelid
   model_chosen <- model_idxs == as.character(modelids[1])
