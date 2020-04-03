@@ -7,8 +7,8 @@
 #' @export
 create_data.table_n_rep_prior <- function(n_vec, n_rep, prior_vec, covariates) {
   n_col <- rep(n_vec, each=length(prior_vec)*n_rep)
-  prior_col <- rep(prior_vec, each=n_rep, times=length(n_vec))
-  rep_col <- rep(seq(n_rep), times=length(n_vec)*length(prior_vec))
+  rep_col <- rep(seq(n_rep), times=length(n_vec), each=length(prior_vec))
+  prior_col <- rep(prior_vec, times=length(n_vec)*n_rep)
   model_dt <- data.table::data.table(
     n=n_col,
     prior=prior_col,
@@ -52,10 +52,9 @@ update_data.table <- function(model_dt, marg_dt, row, fit, model_idxs, covariate
   model_chosen <- model_idxs == as.character(modelids[1])
   model_dt[row, "model_top" := model_chosen]
   mask <- model_idxs == modelids
-  if (!sum(mask)) {
-    model_dt[row, "model_prob" := 0]
-  } else {
-    model_dt[row, "model_prob" := pprobs$pp[mask]]
+  if (sum(mask) == 1) {
+    pprob <- pprobs$pp[mask]
+    if (!is.na(pprob)) model_dt[row, "model_prob" := pprob]
   }
 }
 
