@@ -14,7 +14,8 @@ create_data.table_n_rep_prior <- function(n_vec, n_rep, prior_vec, covariates) {
     prior=prior_col,
     repetition=rep_col,
     model_top=0,
-    model_prob=0
+    model_prob=0,
+    elapsed_time=0
   )
 
   marg_df_aux <- data.frame(matrix(0, nrow=length(prior_col), ncol=length(covariates)))
@@ -42,7 +43,7 @@ create_data.table_n_rep_prior <- function(n_vec, n_rep, prior_vec, covariates) {
 #' @param covariates_in Array with covariate names (as named in mombf's xstd)
 #' @param covariates_out Array with covariate names (as named in marg_dt)
 #' @export
-update_data.table <- function(model_dt, marg_dt, row, fit, model_idxs, covariates_in, covariates_out) {
+update_data.table <- function(model_dt, marg_dt, row, fit, model_idxs, covariates_in, covariates_out, time=NULL) {
   if (missing(covariates_in)) { covariates_in <- colnames(fit$xstd) }
   if (missing(covariates_out)) {covariates_out <- covariates_in }
   aux_df = subset(data.frame(t(fit$margpp)), select=covariates_in)
@@ -51,6 +52,7 @@ update_data.table <- function(model_dt, marg_dt, row, fit, model_idxs, covariate
   modelids <- pprobs$modelid
   model_chosen <- model_idxs == as.character(modelids[1])
   model_dt[row, "model_top" := model_chosen]
+  model_dt[row, "elapsed_time" := time]
   mask <- model_idxs == modelids
   if (sum(mask) == 1) {
     pprob <- pprobs$pp[mask]
